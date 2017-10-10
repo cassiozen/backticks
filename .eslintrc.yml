@@ -1,0 +1,6 @@
+root: true
+extends: fullstack
+rules:
+  semi: [0, never]
+  react/display-name: [0, never]
+  react/no-multi-comp: [0, never]
