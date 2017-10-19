@@ -16,6 +16,8 @@ const escapeRegex = /[&"'<>]/g;
 const lookupEscape = ch => escapeMap[ch];
 
 const escape = val => {
+  if (typeof val !== "string") return val;
+
   const escaped = val.replace(escapeRegex, lookupEscape);
   originalValues[escaped] = val;
   return escaped;
@@ -46,9 +48,9 @@ const dump = exports.dump = val => {
 };
 
 const safetyWrapper = exports.safetyWrapper = val => {
-  if (typeof val === "string") {
-    return escape(val);
-  } else {
+  if (typeof val === "object") {
     return new Proxy(val, proxyHandler);
+  } else {
+    return escape(val);
   }
 };
