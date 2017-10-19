@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var escapeMap = {
+const escapeMap = {
   "&": "&amp;",
   '"': "&quot;",
   "'": "&#39;",
@@ -11,22 +11,44 @@ var escapeMap = {
   ">": "&gt;"
 };
 
-var escapeRegex = /[&"'<>]/g;
+const escapeRegex = /[&"'<>]/g;
 
-var lookupEscape = function lookupEscape(ch) {
-  return escapeMap[ch];
+const lookupEscape = ch => escapeMap[ch];
+
+const escape = val => {
+  const escaped = val.replace(escapeRegex, lookupEscape);
+  originalValues[escaped] = val;
+  return escaped;
 };
 
-var originalValues = exports.originalValues = {};
+const proxyHandler = {
+  get: function (target, prop, receiver) {
+    const value = Reflect.get(target, prop, receiver);
 
-var dump = exports.dump = function dump(val) {
-  var unescapedVal = originalValues[val];
+    switch (typeof value) {
+      case "string":
+        return escape(value);
+
+      case "object":
+        return new Proxy(value, proxyHandler);
+
+      default:
+        return value;
+    }
+  }
+};
+
+const originalValues = exports.originalValues = {};
+
+const dump = exports.dump = val => {
+  const unescapedVal = originalValues[val];
   return unescapedVal ? unescapedVal : val;
 };
 
-var escape = exports.escape = function escape(val) {
-  if (typeof val !== "string") return val;
-  var escaped = val.replace(escapeRegex, lookupEscape);
-  originalValues[escaped] = val;
-  return escaped;
+const safetyWrapper = exports.safetyWrapper = val => {
+  if (typeof val === "string") {
+    return escape(val);
+  } else {
+    return new Proxy(val, proxyHandler);
+  }
 };
