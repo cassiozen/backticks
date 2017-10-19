@@ -1,7 +1,8 @@
 {
-    "name": "jsx-express-engine",
-    "version": "0.0.2",
-    "description": "Express engine creator for the basic use of ES6 template literals for templating",
+    "name": "backticks",
+    "version": "0.1.0",
+    "description": "Express engine creator for the basic use of ES6 template literals (backticks) for templating",
+    "license": "MIT",
     "main": "index.js",
     "engines": {
         "node": ">=8.0.0"
@@ -29,15 +30,16 @@
         "express",
         "template literal",
         "templates",
-        "template engine",
-        "server-side rendering"
+        "template engine"
     ],
-    "homepage": "https://github.com/joedotjs/jsx-express-engine",
-    "bugs": "https://github.com/joedotjs/jsx-express-engine/issues",
+    "homepage": "https://github.com/cassiozen/es6template-express-engine",
+    "bugs": "https://github.com/cassiozen/es6template-express-engine",
     "repository": {
         "type": "git",
-        "url": "https://github.com/joedotjs/jsx-express-engine.git"
+        "url": "https://github.com/cassiozen/es6template-express-engine"
     },
-    "author": "Joe Alves <joseph.michael.alves.@gmail.com> (https://github.com/joedotjs)",
-    "license": "MIT"
+    "contributors": [
+        "Joe Alves <joseph.michael.alves@gmail.com> (https://github.com/joedotjs)",
+        "Cassio Zen <cassiozen@gmail.com> (https://github.com/cassiozen)"
+    ]
 }
