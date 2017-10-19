@@ -8,8 +8,14 @@ var _fs = require("fs");
 
 var _utils = require("./utils");
 
-const defaultLocalKeys = ["dump"];
-const defaultLocalValues = [_utils.dump];
+var _lodash = require("lodash.unescape");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const defaultLocalKeys = ["unescaped"];
+const defaultLocalValues = [_lodash2.default];
 
 // eslint-disable-next-line
 const compile = content => locals => Function(locals, "return `" + content + "`;");
@@ -86,7 +92,7 @@ exports.default = (options = {}) => {
   return (filePath, templateParameters, callback) => {
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)]).then(([Layout, executeTemplate]) => {
       let localsKeys = Object.keys(templateParameters);
-      let localsValues = localsKeys.map(i => (0, _utils.safetyWrapper)(templateParameters[i]));
+      let localsValues = localsKeys.map(i => (0, _utils.escapeWrapper)(templateParameters[i]));
 
       localsKeys = localsKeys.concat(defaultLocalKeys);
       localsValues = localsValues.concat(defaultLocalValues);

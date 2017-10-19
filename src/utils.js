@@ -1,12 +1,4 @@
-import _escape from 'lodash.escape';
-
-const escape = val => {
-  if(typeof val !== "string") return val;
-  
-  const escaped = _escape(val);
-  originalValues[escaped] = val;
-  return escaped;
-};
+import escape from 'lodash.escape';
 
 const proxyHandler = {
   get: function(target, prop, receiver) {
@@ -25,14 +17,7 @@ const proxyHandler = {
   }
 };
 
-export const originalValues = {};
-
-export const dump = val => {
-  const unescapedVal = originalValues[val];
-  return unescapedVal ? unescapedVal : val;
-};
-
-export const safetyWrapper = val => {
+export const escapeWrapper = val => {
   if (typeof val === "object") {
     return new Proxy(val, proxyHandler);
   } else {

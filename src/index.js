@@ -1,8 +1,10 @@
 import { readFile } from "fs";
-import { safetyWrapper, dump } from "./utils";
+import { escapeWrapper } from "./utils";
+import unescape from 'lodash.unescape';
 
-const defaultLocalKeys = ["dump"];
-const defaultLocalValues = [dump];
+
+const defaultLocalKeys = ["unescaped"];
+const defaultLocalValues = [unescape];
 
 // eslint-disable-next-line
 const compile = content => locals => Function(locals, "return `" + content + "`;");
@@ -85,7 +87,7 @@ export default (options = {}) => {
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)])
       .then(([Layout, executeTemplate]) => {
         let localsKeys = Object.keys(templateParameters);
-        let localsValues = localsKeys.map(i => safetyWrapper(templateParameters[i]));
+        let localsValues = localsKeys.map(i => escapeWrapper(templateParameters[i]));
 
         localsKeys = localsKeys.concat(defaultLocalKeys);
         localsValues = localsValues.concat(defaultLocalValues);

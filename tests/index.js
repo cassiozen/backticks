@@ -9,7 +9,7 @@ describe("ES6 Template Literal Engine", function() {
       "./layout.html": "<div id='app'>${yield}</div>",
       "./index.html": "<h1>${name}</h1>",
       "./list.html": "<ul>${names.map(n => `<li>${n}</li>`).join('')}</ul>",
-      "./dump.html": "<h1>${dump(name)}</h1>",
+      "./dump.html": "<h1>${unescaped(name)}</h1>",
       "./page.html": "<h2>Hi</h2>"
     };
   });
