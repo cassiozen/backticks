@@ -1,19 +1,9 @@
-const escapeMap = {
-  "&": "&amp;",
-  '"': "&quot;",
-  "'": "&#39;",
-  "<": "&lt;",
-  ">": "&gt;"
-};
-
-const escapeRegex = /[&"'<>]/g;
-
-const lookupEscape = ch => escapeMap[ch];
+import _escape from 'lodash.escape';
 
 const escape = val => {
   if(typeof val !== "string") return val;
   
-  const escaped = val.replace(escapeRegex, lookupEscape);
+  const escaped = _escape(val);
   originalValues[escaped] = val;
   return escaped;
 };

@@ -3,22 +3,18 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-const escapeMap = {
-  "&": "&amp;",
-  '"': "&quot;",
-  "'": "&#39;",
-  "<": "&lt;",
-  ">": "&gt;"
-};
+exports.safetyWrapper = exports.dump = exports.originalValues = undefined;
 
-const escapeRegex = /[&"'<>]/g;
+var _lodash = require("lodash.escape");
 
-const lookupEscape = ch => escapeMap[ch];
+var _lodash2 = _interopRequireDefault(_lodash);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const escape = val => {
   if (typeof val !== "string") return val;
 
-  const escaped = val.replace(escapeRegex, lookupEscape);
+  const escaped = (0, _lodash2.default)(val);
   originalValues[escaped] = val;
   return escaped;
 };

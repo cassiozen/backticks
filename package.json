@@ -13,7 +13,9 @@
         "lint": "eslint src/index.js",
         "prepublish": "npm run build"
     },
-    "dependencies": {},
+    "dependencies": {
+        "lodash.escape": "^4.0.1"
+    },
     "devDependencies": {
         "babel-cli": "^6.18.0",
         "babel-preset-env": "^1.6.0",
