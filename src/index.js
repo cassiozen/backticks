@@ -1,7 +1,9 @@
 import { readFile } from "fs";
+import { promisify } from "util";
 import { escapeWrapper } from "./utils";
-import unescape from 'lodash.unescape';
+import unescape from "lodash.unescape";
 
+const read = promisify(readFile);
 
 const defaultLocalKeys = ["unescaped"];
 const defaultLocalValues = [unescape];
@@ -11,14 +13,6 @@ const compile = content => locals => Function(locals, "return `" + content + "`;
 
 const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
-
-const read = filepath =>
-  new Promise((resolve, reject) => {
-    readFile(filepath, (err, contents) => {
-      if (err) reject(err);
-      else resolve(contents);
-    });
-  });
 
 const createFromFileSystem = filename => {
   return read(filename).then(content => compile(content));

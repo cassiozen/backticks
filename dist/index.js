@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _fs = require("fs");
 
+var _util = require("util");
+
 var _utils = require("./utils");
 
 var _lodash = require("lodash.unescape");
@@ -13,6 +15,8 @@ var _lodash = require("lodash.unescape");
 var _lodash2 = _interopRequireDefault(_lodash);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const read = (0, _util.promisify)(_fs.readFile);
 
 const defaultLocalKeys = ["unescaped"];
 const defaultLocalValues = [_lodash2.default];
@@ -22,12 +26,6 @@ const compile = content => locals => Function(locals, "return `" + content + "`;
 
 const GeneratorFunction = Object.getPrototypeOf(function* () {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
-
-const read = filepath => new Promise((resolve, reject) => {
-  (0, _fs.readFile)(filepath, (err, contents) => {
-    if (err) reject(err);else resolve(contents);
-  });
-});
 
 const createFromFileSystem = filename => {
   return read(filename).then(content => compile(content));
