@@ -193,7 +193,7 @@ describe("ES6 Template Literal Engine", function() {
       ]);
     });
 
-    it("escapes functions in locals", () => {
+    it("escapes returned values from functions in locals", () => {
       const engine = createEngine();
       return new Promise((resolve, reject) => {
         engine(
@@ -216,7 +216,31 @@ describe("ES6 Template Literal Engine", function() {
       })
     })
 
-    it("selected functions (such as Array.prototype functions) are automaticaly unescaped", () => {
+    it("avoids escaping selected functions in locals", () => {
+      const locals = { user: {
+        getUser: function() {
+          return '<a href="mailto:jon@jon.com">Jon</a>';
+        }
+      }}
+      const engine = createEngine({
+        autoEscapedFunctions: [locals.user]
+      });
+      return new Promise((resolve, reject) => {
+        engine(
+          "./function.html",
+          locals,
+          (err, body) => {
+            if (err) return reject(err);
+            expect(body).to.be.equal(
+              '<h1><a href="mailto:jon@jon.com">Jon</a></h1>'
+            );
+            resolve();
+          }
+        );
+      })
+    })
+
+    it("automatically unescape Array.prototype functions", () => {
       const engine = createEngine();
       return new Promise((resolve, reject) => {
         engine(
@@ -231,7 +255,6 @@ describe("ES6 Template Literal Engine", function() {
           }
         );
       })
-
     })
   });
 });

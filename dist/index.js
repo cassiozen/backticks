@@ -86,16 +86,16 @@ exports.default = (options = {}) => {
   options = (0, _lodash4.default)({
     caching: false,
     layoutFile: null,
-    autoEscapedFunctions: []
+    autoEscapedFunctions: [Array.prototype]
   }, options);
 
   const retrieveTemplateRenderer = buildRetrieve(options.caching);
   const retrieveLayout = buildLayoutRetrieve(options.layoutFile, options.caching);
-
+  const escapeWrapper = (0, _utils.createEscapeWrapper)(options);
   return (filePath, templateParameters, callback) => {
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)]).then(([Layout, executeTemplate]) => {
       let localsKeys = Object.keys(templateParameters);
-      let localsValues = localsKeys.map(i => (0, _utils.escapeWrapper)(templateParameters[i]));
+      let localsValues = localsKeys.map(i => escapeWrapper(templateParameters[i]));
 
       localsKeys = localsKeys.concat(defaultLocalKeys);
       localsValues = localsValues.concat(defaultLocalValues);

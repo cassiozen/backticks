@@ -1,6 +1,6 @@
 import { readFile } from "fs";
 import { promisify } from "util";
-import { escapeWrapper } from "./utils";
+import { createEscapeWrapper } from "./utils";
 import unescape from "lodash.unescape";
 import merge from "lodash.merge";
 
@@ -71,14 +71,14 @@ export default (options = {}) => {
     {
       caching: false,
       layoutFile: null,
-      autoEscapedFunctions: [],
+      autoEscapedFunctions: [Array.prototype],
     },
     options
   );
 
   const retrieveTemplateRenderer = buildRetrieve(options.caching);
   const retrieveLayout = buildLayoutRetrieve(options.layoutFile, options.caching);
-
+  const escapeWrapper = createEscapeWrapper(options);
   return (filePath, templateParameters, callback) => {
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)])
       .then(([Layout, executeTemplate]) => {
