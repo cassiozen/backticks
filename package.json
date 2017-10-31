@@ -1,6 +1,6 @@
 {
     "name": "backticks",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "Express engine creator for the basic use of ES6 template literals (backticks) for templating",
     "license": "MIT",
     "main": "index.js",
@@ -33,11 +33,11 @@
         "templates",
         "template engine"
     ],
-    "homepage": "https://github.com/cassiozen/es6template-express-engine",
-    "bugs": "https://github.com/cassiozen/es6template-express-engine",
+    "homepage": "https://github.com/cassiozen/backticks",
+    "bugs": "https://github.com/cassiozen/backticks",
     "repository": {
         "type": "git",
-        "url": "https://github.com/cassiozen/es6template-express-engine"
+        "url": "https://github.com/cassiozen/backticks"
     },
     "contributors": [
         "Joe Alves <joseph.michael.alves@gmail.com> (https://github.com/joedotjs)",
