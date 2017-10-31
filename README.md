@@ -17,7 +17,7 @@ $ npm i backticks
 
 ## Usage
 
-### Setup
+### Basic Usage
 
 The basics required to integrate backticks renderer are:
 
@@ -54,4 +54,56 @@ HTML template file named index.html in the views directory is needed, with the f
     <h1>${message}</h1>
 </body>
 </html>
+```
+
+### Using a Layout file
+
+Backticks supports the usage of a layout fil: it does so by combining the view with the configured layout. The layout is processed in a generator function, so you have access to `yield` Within it (identifies where the contents of the view currently being rendered is inserted).
+
+Example:
+
+
+
+
+```javascript
+var express = require('express'),
+  backticks = require('backticks'),
+  app = express();
+
+app.engine('html', backticks({
+  caching: true,
+  layoutFile: join(__dirname, './views/layout.html')
+}));
+app.set('views', 'views');
+app.set('view engine', 'html');
+
+
+app.get('/', function(req, res) {
+  res.render('index', {message: "Hello World"});
+});
+
+app.listen(3000);
+```
+
+**Layout File:**  
+
+```html
+<html>
+  <head>
+    <title>Hey, up here!</title>
+  </head>
+  <body>
+    <div id="page">
+      ${yield}
+    </div>
+  </body>
+</html>
+```
+
+**Template:**  
+
+```html
+<div>
+  <h1>${message}</h1>
+</div>
 ```
