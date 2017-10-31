@@ -11,9 +11,6 @@ export const createEscapeWrapper = options => {
       const value = Reflect.get(target, prop, receiver);
 
       switch (typeof value) {
-        case "string":
-          return escape(value);
-
         case "object":
           return new Proxy(value, proxyHandler);
 
@@ -29,7 +26,7 @@ export const createEscapeWrapper = options => {
           }
 
         default:
-          return value;
+          return escape(value);
       }
     }
   };
