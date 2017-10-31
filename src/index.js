@@ -2,6 +2,7 @@ import { readFile } from "fs";
 import { promisify } from "util";
 import { escapeWrapper } from "./utils";
 import unescape from "lodash.unescape";
+import merge from "lodash.merge";
 
 const read = promisify(readFile);
 
@@ -66,10 +67,11 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
 };
 
 export default (options = {}) => {
-  options = Object.assign(
+  options = merge(
     {
       caching: false,
-      layoutFile: null
+      layoutFile: null,
+      autoEscapedFunctions: [],
     },
     options
   );

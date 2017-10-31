@@ -1,5 +1,9 @@
 import escape from 'lodash.escape';
 
+const functionProxy = wrappedFn => function() {
+  return escapeWrapper(wrappedFn.apply(this, arguments));
+}
+
 const proxyHandler = {
   get: function(target, prop, receiver) {
     const value = Reflect.get(target, prop, receiver);
@@ -10,6 +14,13 @@ const proxyHandler = {
 
       case "object":
         return new Proxy(value, proxyHandler);
+
+      case "function":
+        if(Array.prototype[prop] && Array.prototype[prop] === value) {
+          return value;
+        } else {
+          return functionProxy(value);
+        }
 
       default:
         return value;

@@ -1,3 +1,3 @@
-# template-literal-express-engine
+# Backticks
 
-A basic Express view engine for using ES2015 Template Literals for single-pass server-side templating.
+An Express view engine for using ES2015 Template Literals for single-pass server-side templating.

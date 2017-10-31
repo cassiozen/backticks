@@ -14,6 +14,10 @@ var _lodash = require("lodash.unescape");
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _lodash3 = require("lodash.merge");
+
+var _lodash4 = _interopRequireDefault(_lodash3);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 const read = (0, _util.promisify)(_fs.readFile);
@@ -79,9 +83,10 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
 };
 
 exports.default = (options = {}) => {
-  options = Object.assign({
+  options = (0, _lodash4.default)({
     caching: false,
-    layoutFile: null
+    layoutFile: null,
+    autoEscapedFunctions: []
   }, options);
 
   const retrieveTemplateRenderer = buildRetrieve(options.caching);
