@@ -28,7 +28,8 @@ const createEscapeWrapper = exports.createEscapeWrapper = options => {
           return new Proxy(value, proxyHandler);
 
         case "function":
-          const autoEscapedFn = options.autoEscapedFunctions.find(obj => obj === value || obj[prop] && obj[prop] === value);
+          // The current value is a function: Is it in the functions whitelist?
+          const autoEscapedFn = options.fnWhitelist.find(obj => obj === value || obj[prop] && obj[prop] === value);
           if (autoEscapedFn) {
             return value;
           } else {

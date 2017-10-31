@@ -216,14 +216,14 @@ describe("ES6 Template Literal Engine", function() {
       })
     })
 
-    it("avoids escaping selected functions in locals", () => {
+    it("avoids escaping whitelisted functions in locals", () => {
       const locals = { user: {
         getUser: function() {
           return '<a href="mailto:jon@jon.com">Jon</a>';
         }
       }}
       const engine = createEngine({
-        autoEscapedFunctions: [locals.user]
+        fnWhitelist: [locals.user]
       });
       return new Promise((resolve, reject) => {
         engine(
@@ -240,7 +240,7 @@ describe("ES6 Template Literal Engine", function() {
       })
     })
 
-    it("automatically unescape Array.prototype functions", () => {
+    it("automatically avoids escaping Array.prototype functions", () => {
       const engine = createEngine();
       return new Promise((resolve, reject) => {
         engine(

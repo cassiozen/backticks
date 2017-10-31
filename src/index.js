@@ -71,7 +71,7 @@ export default (options = {}) => {
     {
       caching: false,
       layoutFile: null,
-      autoEscapedFunctions: [Array.prototype],
+      fnWhitelist: [Array.prototype],
     },
     options
   );

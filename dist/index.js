@@ -86,7 +86,7 @@ exports.default = (options = {}) => {
   options = (0, _lodash4.default)({
     caching: false,
     layoutFile: null,
-    autoEscapedFunctions: [Array.prototype]
+    fnWhitelist: [Array.prototype]
   }, options);
 
   const retrieveTemplateRenderer = buildRetrieve(options.caching);
