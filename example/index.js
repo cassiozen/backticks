@@ -1,9 +1,9 @@
 var app = require('express')();
 var join = require('path').join;
 
-var es6templatEngine = require(join(__dirname, '../'));
+var backticks = require(join(__dirname, '../'));
 
-app.engine('html', es6templatEngine({
+app.engine('html', backticks({
   caching: true,
   layoutFile: join(__dirname, './views/layout.html')
 }));
