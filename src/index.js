@@ -1,16 +1,17 @@
 import { readFile } from "fs";
 import { promisify } from "util";
+import html from "./htmlTemplate";
 import { createEscapeWrapper } from "./utils";
 import unescape from "lodash.unescape";
 import merge from "lodash.merge";
 
 const read = promisify(readFile);
 
-const defaultLocalKeys = ["unescaped"];
-const defaultLocalValues = [unescape];
+const defaultLocalKeys = ["unescaped", "__htmlTaggedTemplateLiteral__"];
+const defaultLocalValues = [unescape, html];
 
 // eslint-disable-next-line
-const compile = content => locals => Function(locals, "return `" + content + "`;");
+const compile = content => locals => Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
 
 const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");

@@ -8,6 +8,10 @@ var _fs = require("fs");
 
 var _util = require("util");
 
+var _htmlTemplate = require("./htmlTemplate");
+
+var _htmlTemplate2 = _interopRequireDefault(_htmlTemplate);
+
 var _utils = require("./utils");
 
 var _lodash = require("lodash.unescape");
@@ -22,11 +26,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 const read = (0, _util.promisify)(_fs.readFile);
 
-const defaultLocalKeys = ["unescaped"];
-const defaultLocalValues = [_lodash2.default];
+const defaultLocalKeys = ["unescaped", "__htmlTaggedTemplateLiteral__"];
+const defaultLocalValues = [_lodash2.default, _htmlTemplate2.default];
 
 // eslint-disable-next-line
-const compile = content => locals => Function(locals, "return `" + content + "`;");
+const compile = content => locals => Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
 
 const GeneratorFunction = Object.getPrototypeOf(function* () {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");

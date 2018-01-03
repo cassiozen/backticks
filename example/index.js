@@ -11,7 +11,7 @@ app.set('view engine', 'html');
 app.set('views', join(__dirname, './views'));
 
 app.get('/', function (req, res) {
-  res.render('index', {name: 'Joe'});
+  res.render('index', {names: ['Joe', 'John']});
 });
 
 app.listen(3000, function () {

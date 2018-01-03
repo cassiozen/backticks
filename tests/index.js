@@ -9,6 +9,7 @@ describe("ES6 Template Literal Engine", function() {
       "./layout.html": "<div id='app'>${yield}</div>",
       "./index.html": "<h1>${name}</h1>",
       "./list.html": "<ul>${names.map(n => `<li>${n}</li>`).join('')}</ul>",
+      "./list-noJoin.html": "<ul>${names.map(n => `<li>${n}</li>`)}</ul>",
       "./object.html": "<h1>${user.name}</h1>",
       "./function.html": "<h1>${user.getUser()}</h1>",
       "./dump.html": "<h1>${unescaped(name)}</h1>",
@@ -130,33 +131,21 @@ describe("ES6 Template Literal Engine", function() {
     it("escapes locals", () => {
       const engine = createEngine();
 
-      return Promise.all([
-        new Promise((resolve, reject) => {
-          engine(
-            "./index.html",
-            { name: 'Jon<script>alert("ES6 Renderer")</script>' },
-            (err, body) => {
-              if (err) return reject(err);
-              expect(body).to.be.equal(
-                "<h1>Jon&lt;script&gt;alert(&quot;ES6 Renderer&quot;)&lt;/script&gt;</h1>"
-              );
-              resolve();
-            }
-          );
-        }),
+      return new Promise((resolve, reject) => {
+        engine(
+          "./index.html",
+          { name: 'Jon<script>alert("ES6 Renderer")</script>' },
+          (err, body) => {
+            if (err) return reject(err);
+            expect(body).to.be.equal(
+              "<h1>Jon&lt;script&gt;alert(&quot;ES6 Renderer&quot;)&lt;/script&gt;</h1>"
+            );
+            resolve();
+          }
+        );
+      })
 
-        new Promise((resolve, reject) => {
-          engine(
-            "./dump.html",
-            { name: 'Jon<script>alert("ES6 Renderer")</script>' },
-            (err, body) => {
-              if (err) return reject(err);
-              expect(body).to.be.equal('<h1>Jon<script>alert("ES6 Renderer")</script></h1>');
-              resolve();
-            }
-          );
-        })
-      ]);
+        
     });
 
     it("escapes locals inside nested objects", () => {
@@ -251,6 +240,41 @@ describe("ES6 Template Literal Engine", function() {
             expect(body).to.be.equal(
               "<ul><li>Jon</li><li>Joe</li></ul>"
             );
+            resolve();
+          }
+        );
+      })
+    })
+  });
+
+  describe("Niceties", () => {
+
+    it("Automatically joins returned arrays", () => {
+      const engine = createEngine();
+      return new Promise((resolve, reject) => {
+        engine(
+          "./list-noJoin.html",
+          { names: ['Jon', "Joe"] },
+          (err, body) => {
+            if (err) return reject(err);
+            expect(body).to.be.equal(
+              "<ul><li>Jon</li><li>Joe</li></ul>"
+            );
+            resolve();
+          }
+        );
+      })
+    })
+
+    it("Provides an unescape function", () => {
+      const engine = createEngine();
+      return new Promise((resolve, reject) => {
+        engine(
+          "./dump.html",
+          { name: 'Jon<script>alert("ES6 Renderer")</script>' },
+          (err, body) => {
+            if (err) return reject(err);
+            expect(body).to.be.equal('<h1>Jon<script>alert("ES6 Renderer")</script></h1>');
             resolve();
           }
         );
