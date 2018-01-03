@@ -13,7 +13,7 @@ $ npm i backticks
 * Compiled and interpreted by V8 (minimun overhead to the project)
 * Learning new syntax is not required
 * Niceties like automatic escaping & automatic array joining
-* Support for layout using generator functions
+* Layout as a generator function
 
 
 ## Usage
