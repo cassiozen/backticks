@@ -1,6 +1,6 @@
 {
     "name": "backticks",
-    "version": "0.1.1",
+    "version": "0.1.2",
     "description": "Express engine creator for the basic use of ES6 template literals (backticks) for templating",
     "license": "MIT",
     "main": "index.js",
@@ -8,7 +8,7 @@
         "node": ">=8.0.0"
     },
     "scripts": {
-        "build": "babel src --out-dir dist",
+        "build": "rollup -c",
         "example": "npm run build && node example/",
         "test": "npm run build && mocha ./tests/index.js",
         "lint": "eslint src/index.js",
@@ -20,12 +20,11 @@
         "lodash.unescape": "^4.0.1"
     },
     "devDependencies": {
-        "babel-cli": "^6.18.0",
-        "babel-preset-env": "^1.6.0",
         "chai": "^4.1.2",
         "eslint": "^3.13.1",
         "eslint-config-fullstack": "^2.5.0",
-        "mocha": "^4.0.1"
+        "mocha": "^4.0.1",
+        "rollup": "^0.53.3"
     },
     "keywords": [
         "express",

@@ -1,38 +1,96 @@
-"use strict";
+'use strict';
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'default' in ex) ? ex['default'] : ex; }
 
-var _fs = require("fs");
+var fs = require('fs');
+var util = require('util');
+var escape = _interopDefault(require('lodash.escape'));
+var unescape = _interopDefault(require('lodash.unescape'));
+var merge = _interopDefault(require('lodash.merge'));
 
-var _util = require("util");
+// Based on "HTML templating with ES6 template strings" by Dr. Axel Rauschmayer 
+// http://2ality.com/2015/01/template-strings-html.html
 
-var _htmlTemplate = require("./htmlTemplate");
+function html(literalSections, ...substs) {
+  // Use raw literal sections: we don’t want
+  // backslashes (\n etc.) to be interpreted
+  let raw = literalSections.raw;
 
-var _htmlTemplate2 = _interopRequireDefault(_htmlTemplate);
+  let result = '';
 
-var _utils = require("./utils");
+  substs.forEach((subst, i) => {
+      // Retrieve the literal section preceding
+      // the current substitution
+      result += raw[i];
 
-var _lodash = require("lodash.unescape");
+      // In the example, map() returns an array:
+      // If substitution is an array (and not a string),
+      // we turn it into a string
+      if (Array.isArray(subst)) {
+          subst = subst.join('');
+      }
 
-var _lodash2 = _interopRequireDefault(_lodash);
+      result += subst;
+  });
+  // Take care of last literal section
+  // (Never fails, because an empty template string
+  // produces one literal section, an empty string)
+  result += raw[raw.length-1]; // (A)
 
-var _lodash3 = require("lodash.merge");
+  return result;
+}
 
-var _lodash4 = _interopRequireDefault(_lodash3);
+const createEscapeWrapper = options => {
+  const functionProxy = wrappedFn =>
+    function() {
+      return escapeWrapper(wrappedFn.apply(this, arguments));
+    };
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+  const proxyHandler = {
+    get: function(target, prop, receiver) {
+      const value = Reflect.get(target, prop, receiver);
 
-const read = (0, _util.promisify)(_fs.readFile);
+      switch (typeof value) {
+        case "object":
+          return new Proxy(value, proxyHandler);
+
+        case "function":
+          // The current value is a function: Is it in the functions whitelist?
+          const autoEscapedFn = options.fnWhitelist.find(
+            obj => obj === value || (obj[prop] && obj[prop] === value)
+          );
+          if (autoEscapedFn) {
+            return value;
+          } else {
+            return functionProxy(value);
+          }
+
+        default:
+          return escape(value);
+      }
+    }
+  };
+
+  const escapeWrapper = val => {
+    if (typeof val === "object") {
+      return new Proxy(val, proxyHandler);
+    } else {
+      return escape(val);
+    }
+  };
+
+  return escapeWrapper;
+};
+
+const read = util.promisify(fs.readFile);
 
 const defaultLocalKeys = ["unescaped", "__htmlTaggedTemplateLiteral__"];
-const defaultLocalValues = [_lodash2.default, _htmlTemplate2.default];
+const defaultLocalValues = [unescape, html];
 
 // eslint-disable-next-line
 const compile = content => locals => Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
 
-const GeneratorFunction = Object.getPrototypeOf(function* () {}).constructor;
+const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
 
 const createFromFileSystem = filename => {
@@ -86,32 +144,39 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
   }
 };
 
-exports.default = (options = {}) => {
-  options = (0, _lodash4.default)({
-    caching: false,
-    layoutFile: null,
-    fnWhitelist: [Array.prototype]
-  }, options);
+var index = (options = {}) => {
+  options = merge(
+    {
+      caching: false,
+      layoutFile: null,
+      fnWhitelist: [Array.prototype],
+    },
+    options
+  );
 
   const retrieveTemplateRenderer = buildRetrieve(options.caching);
   const retrieveLayout = buildLayoutRetrieve(options.layoutFile, options.caching);
-  const escapeWrapper = (0, _utils.createEscapeWrapper)(options);
+  const escapeWrapper = createEscapeWrapper(options);
   return (filePath, templateParameters, callback) => {
-    Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)]).then(([Layout, executeTemplate]) => {
-      let localsKeys = Object.keys(templateParameters);
-      let localsValues = localsKeys.map(i => escapeWrapper(templateParameters[i]));
+    Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)])
+      .then(([Layout, executeTemplate]) => {
+        let localsKeys = Object.keys(templateParameters);
+        let localsValues = localsKeys.map(i => escapeWrapper(templateParameters[i]));
 
-      localsKeys = localsKeys.concat(defaultLocalKeys);
-      localsValues = localsValues.concat(defaultLocalValues);
+        localsKeys = localsKeys.concat(defaultLocalKeys);
+        localsValues = localsValues.concat(defaultLocalValues);
 
-      const renderedContent = executeTemplate(localsKeys)(...localsValues);
+        const renderedContent = executeTemplate(localsKeys)(...localsValues);
 
-      const layoutIterator = Layout();
+        const layoutIterator = Layout();
 
-      layoutIterator.next();
-      const { value } = layoutIterator.next(renderedContent);
+        layoutIterator.next();
+        const { value } = layoutIterator.next(renderedContent);
 
-      callback(null, value);
-    }).catch(callback);
+        callback(null, value);
+      })
+      .catch(callback);
   };
 };
+
+module.exports = index;
