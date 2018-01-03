@@ -124,7 +124,9 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
   }
 
   const createLayoutFromFilePath = () => {
-    return read(filePath).then(layoutContents => compileTemplate(layoutContents));
+    return read(filePath)
+      .then(layoutContents => compileTemplate(layoutContents))
+      .catch(e => compileTemplate("${yield}"));
   };
 
   if (shouldCache) {
@@ -155,10 +157,16 @@ var index = (options = {}) => {
     options
   );
 
-  const retrieveTemplateRenderer = buildRetrieve(options.caching);
-  const retrieveLayout = buildLayoutRetrieve(options.layoutFile, options.caching);
-  const escapeWrapper = createEscapeWrapper(options);
   return (filePath, templateParameters, callback) => {
+    // generates default layout name
+    if (!options.layoutFile) {
+      options.layoutFile = `${templateParameters.settings.views}/layout.${templateParameters.settings["view engine"]}`;
+    }
+
+    const retrieveTemplateRenderer = buildRetrieve(options.caching);
+    const retrieveLayout = buildLayoutRetrieve(options.layoutFile, options.caching);
+    const escapeWrapper = createEscapeWrapper(options);
+
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)])
       .then(([Layout, executeTemplate]) => {
         let localsKeys = Object.keys(templateParameters);

@@ -59,11 +59,11 @@ HTML template file named index.html in the views directory is needed, with the f
 
 ### Using a Layout file
 
-Backticks supports the usage of a layout file: it does so by combining the view with the configured layout. The layout is processed in a generator function, so you have access to `yield` Within it (identifies where the contents of the view currently being rendered is inserted).
+Backticks supports the usage of a layout file. The layout is processed in a generator function, so you have access to `yield` Within it.
+
+By default, Backticks will try to load a "layout" file using the same folder and extension of your views.
 
 Example:
-
-
 
 
 ```javascript
@@ -72,8 +72,7 @@ var express = require('express'),
   app = express();
 
 app.engine('html', backticks({
-  caching: true,
-  layoutFile: join(__dirname, './views/layout.html')
+  caching: true
 }));
 app.set('views', 'views');
 app.set('view engine', 'html');
@@ -86,7 +85,7 @@ app.get('/', function(req, res) {
 app.listen(3000);
 ```
 
-**Layout File:**  
+**`views/layout.html`:**  
 
 ```html
 <html>
@@ -108,6 +107,17 @@ app.listen(3000);
   <h1>${message}</h1>
 </div>
 ```
+
+## Settings
+
+These are the available options when instantiating backticks:
+
+| Option  | Description | Default Value
+|---|---|---|
+| caching  | Wheter or not Backticks should cache views | false |
+| layoutFile | File to use as layout for views | [views folder]/layout.[view engine]
+| fnWhitelist | By default, values returned from functions provided in locals are automatically escaped. You can whitelist functions to avoid auto escaping  | [Array.prototype]
+
 
 ## Should I use this in production code?  
 
