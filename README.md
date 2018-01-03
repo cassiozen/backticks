@@ -12,9 +12,9 @@ $ npm i backticks
 
 * Compiled and interpreted by V8 (minimun overhead to the project)
 * Learning new syntax is not required
-* Automatic escaping of locals
+* Niceties like automatic escaping & automatic array joining
 * Support for layout using generator functions
-* Niceties like automatic array joining
+
 
 ## Usage
 
@@ -59,7 +59,7 @@ HTML template file named index.html in the views directory is needed, with the f
 
 ### Using a Layout file
 
-Backticks supports the usage of a layout fil: it does so by combining the view with the configured layout. The layout is processed in a generator function, so you have access to `yield` Within it (identifies where the contents of the view currently being rendered is inserted).
+Backticks supports the usage of a layout file: it does so by combining the view with the configured layout. The layout is processed in a generator function, so you have access to `yield` Within it (identifies where the contents of the view currently being rendered is inserted).
 
 Example:
 
