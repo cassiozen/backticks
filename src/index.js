@@ -1,6 +1,6 @@
 import { readFile } from "fs";
 import { promisify } from "util";
-import { path } from "path";
+import path from "path";
 import html from "./htmlTemplate";
 import { createEscapeWrapper } from "./utils";
 import unescape from "lodash.unescape";
@@ -84,7 +84,8 @@ export default (options = {}) => {
   return (filePath, templateParameters, callback) => {
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)])
       .then(([Layout, executeTemplate]) => {
-        let localsKeys = Object.keys(templateParameters);
+        try {
+          let localsKeys = Object.keys(templateParameters);
         let localsValues = localsKeys.map(i => escapeWrapper(templateParameters[i]));
 
         localsKeys = localsKeys.concat(defaultLocalKeys);
@@ -98,6 +99,10 @@ export default (options = {}) => {
         const { value } = layoutIterator.next(renderedContent);
 
         callback(null, value);
+        } catch (error) {
+          
+        }
+        
       })
       .catch(callback);
   };
