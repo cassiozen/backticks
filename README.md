@@ -13,7 +13,8 @@ $ npm i backticks
 * Compiled and interpreted by V8 (minimun overhead to the project)
 * Learning new syntax is not required
 * Automatic escaping of locals
-* Support for layout using generator functions.
+* Support for layout using generator functions
+* Niceties like automatic array joining
 
 ## Usage
 
@@ -107,3 +108,7 @@ app.listen(3000);
   <h1>${message}</h1>
 </div>
 ```
+
+## Should I use this in production code?  
+
+Use Backticks if you need something quick and simple. It is not as readable as the template syntax supported by Handlebars.js and similar templating engines. On the other hand, it is lightweight and new syntax is introduced: It's just JavaScript.
