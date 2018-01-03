@@ -1,6 +1,6 @@
 {
     "name": "backticks",
-    "version": "0.1.9",
+    "version": "0.1.10",
     "description": "Express engine creator for the basic use of ES6 template literals (backticks) for templating",
     "license": "MIT",
     "main": "index.js",
