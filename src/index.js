@@ -1,5 +1,6 @@
 import { readFile } from "fs";
 import { promisify } from "util";
+import { path } from "path";
 import html from "./htmlTemplate";
 import { createEscapeWrapper } from "./utils";
 import unescape from "lodash.unescape";
@@ -17,7 +18,7 @@ const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
 
 const createFromFileSystem = filename => {
-  return read(filename).then(content => compile(content));
+  return read(path.resolve(filename)).then(content => compile(content));
 };
 
 const buildRetrieve = caching => {
@@ -46,7 +47,7 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
   }
 
   const createLayoutFromFilePath = () => {
-    return read(filePath).then(layoutContents => compileTemplate(layoutContents));
+    return read(path.resolve(filePath)).then(layoutContents => compileTemplate(layoutContents));
   };
 
   if (shouldCache) {
