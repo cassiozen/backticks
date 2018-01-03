@@ -4,6 +4,7 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var fs = require('fs');
 var util = require('util');
+var path = require('path');
 var escape = _interopDefault(require('lodash.escape'));
 var unescape = _interopDefault(require('lodash.unescape'));
 var merge = _interopDefault(require('lodash.merge'));
@@ -94,7 +95,7 @@ const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
 
 const createFromFileSystem = filename => {
-  return read(filename).then(content => compile(content));
+  return read(path.path.resolve(filename)).then(content => compile(content));
 };
 
 const buildRetrieve = caching => {
@@ -123,7 +124,7 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
   }
 
   const createLayoutFromFilePath = () => {
-    return read(filePath).then(layoutContents => compileTemplate(layoutContents));
+    return read(path.path.resolve(filePath)).then(layoutContents => compileTemplate(layoutContents));
   };
 
   if (shouldCache) {

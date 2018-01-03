@@ -4,5 +4,5 @@ export default {
     file: 'dist/index.js',
     format: 'cjs'
   },
-  external: ['lodash.escape', 'lodash.unescape', 'lodash.merge', 'fs', 'util']
+  external: ['lodash.escape', 'lodash.unescape', 'lodash.merge', 'fs', 'util', 'path']
 };
