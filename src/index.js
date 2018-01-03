@@ -1,6 +1,5 @@
 import { readFile } from "fs";
 import { promisify } from "util";
-import path from "path";
 import html from "./htmlTemplate";
 import { createEscapeWrapper } from "./utils";
 import unescape from "lodash.unescape";
@@ -12,13 +11,14 @@ const defaultLocalKeys = ["unescaped", "__htmlTaggedTemplateLiteral__"];
 const defaultLocalValues = [unescape, html];
 
 // eslint-disable-next-line
-const compile = content => locals => Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
+const compile = content => locals =>
+  Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
 
 const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
 
 const createFromFileSystem = filename => {
-  return read(path.resolve(filename)).then(content => compile(content));
+  return read(filename).then(content => compile(content));
 };
 
 const buildRetrieve = caching => {
@@ -47,7 +47,7 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
   }
 
   const createLayoutFromFilePath = () => {
-    return read(path.resolve(filePath)).then(layoutContents => compileTemplate(layoutContents));
+    return read(filePath).then(layoutContents => compileTemplate(layoutContents));
   };
 
   if (shouldCache) {
@@ -73,7 +73,7 @@ export default (options = {}) => {
     {
       caching: false,
       layoutFile: null,
-      fnWhitelist: [Array.prototype],
+      fnWhitelist: [Array.prototype]
     },
     options
   );
@@ -84,8 +84,7 @@ export default (options = {}) => {
   return (filePath, templateParameters, callback) => {
     Promise.all([retrieveLayout(), retrieveTemplateRenderer(filePath)])
       .then(([Layout, executeTemplate]) => {
-        try {
-          let localsKeys = Object.keys(templateParameters);
+        let localsKeys = Object.keys(templateParameters);
         let localsValues = localsKeys.map(i => escapeWrapper(templateParameters[i]));
 
         localsKeys = localsKeys.concat(defaultLocalKeys);
@@ -99,10 +98,6 @@ export default (options = {}) => {
         const { value } = layoutIterator.next(renderedContent);
 
         callback(null, value);
-        } catch (error) {
-          
-        }
-        
       })
       .catch(callback);
   };

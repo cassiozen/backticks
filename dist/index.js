@@ -4,12 +4,11 @@ function _interopDefault (ex) { return (ex && (typeof ex === 'object') && 'defau
 
 var fs = require('fs');
 var util = require('util');
-var path = require('path');
 var escape = _interopDefault(require('lodash.escape'));
 var unescape = _interopDefault(require('lodash.unescape'));
 var merge = _interopDefault(require('lodash.merge'));
 
-// Based on "HTML templating with ES6 template strings" by Dr. Axel Rauschmayer 
+// Based on "HTML templating with ES6 template strings" by Dr. Axel Rauschmayer
 // http://2ality.com/2015/01/template-strings-html.html
 
 function html(literalSections, ...substs) {
@@ -17,26 +16,26 @@ function html(literalSections, ...substs) {
   // backslashes (\n etc.) to be interpreted
   let raw = literalSections.raw;
 
-  let result = '';
+  let result = "";
 
   substs.forEach((subst, i) => {
-      // Retrieve the literal section preceding
-      // the current substitution
-      result += raw[i];
+    // Retrieve the literal section preceding
+    // the current substitution
+    result += raw[i];
 
-      // In the example, map() returns an array:
-      // If substitution is an array (and not a string),
-      // we turn it into a string
-      if (Array.isArray(subst)) {
-          subst = subst.join('');
-      }
+    // In the example, map() returns an array:
+    // If substitution is an array (and not a string),
+    // we turn it into a string
+    if (Array.isArray(subst)) {
+      subst = subst.join("");
+    }
 
-      result += subst;
+    result += subst;
   });
   // Take care of last literal section
   // (Never fails, because an empty template string
   // produces one literal section, an empty string)
-  result += raw[raw.length-1]; // (A)
+  result += raw[raw.length - 1]; // (A)
 
   return result;
 }
@@ -89,13 +88,14 @@ const defaultLocalKeys = ["unescaped", "__htmlTaggedTemplateLiteral__"];
 const defaultLocalValues = [unescape, html];
 
 // eslint-disable-next-line
-const compile = content => locals => Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
+const compile = content => locals =>
+  Function(locals, "return __htmlTaggedTemplateLiteral__`" + content + "`;");
 
 const GeneratorFunction = Object.getPrototypeOf(function*() {}).constructor;
 const compileTemplate = content => new GeneratorFunction("", "yield `" + content + "`;");
 
 const createFromFileSystem = filename => {
-  return read(path.path.resolve(filename)).then(content => compile(content));
+  return read(filename).then(content => compile(content));
 };
 
 const buildRetrieve = caching => {
@@ -124,7 +124,7 @@ const buildLayoutRetrieve = (filePath, shouldCache) => {
   }
 
   const createLayoutFromFilePath = () => {
-    return read(path.path.resolve(filePath)).then(layoutContents => compileTemplate(layoutContents));
+    return read(filePath).then(layoutContents => compileTemplate(layoutContents));
   };
 
   if (shouldCache) {
@@ -150,7 +150,7 @@ var index = (options = {}) => {
     {
       caching: false,
       layoutFile: null,
-      fnWhitelist: [Array.prototype],
+      fnWhitelist: [Array.prototype]
     },
     options
   );

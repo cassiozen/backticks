@@ -1,4 +1,4 @@
-// Based on "HTML templating with ES6 template strings" by Dr. Axel Rauschmayer 
+// Based on "HTML templating with ES6 template strings" by Dr. Axel Rauschmayer
 // http://2ality.com/2015/01/template-strings-html.html
 
 export default function html(literalSections, ...substs) {
@@ -6,26 +6,26 @@ export default function html(literalSections, ...substs) {
   // backslashes (\n etc.) to be interpreted
   let raw = literalSections.raw;
 
-  let result = '';
+  let result = "";
 
   substs.forEach((subst, i) => {
-      // Retrieve the literal section preceding
-      // the current substitution
-      result += raw[i];
+    // Retrieve the literal section preceding
+    // the current substitution
+    result += raw[i];
 
-      // In the example, map() returns an array:
-      // If substitution is an array (and not a string),
-      // we turn it into a string
-      if (Array.isArray(subst)) {
-          subst = subst.join('');
-      }
+    // In the example, map() returns an array:
+    // If substitution is an array (and not a string),
+    // we turn it into a string
+    if (Array.isArray(subst)) {
+      subst = subst.join("");
+    }
 
-      result += subst;
+    result += subst;
   });
   // Take care of last literal section
   // (Never fails, because an empty template string
   // produces one literal section, an empty string)
-  result += raw[raw.length-1]; // (A)
+  result += raw[raw.length - 1]; // (A)
 
   return result;
 }
